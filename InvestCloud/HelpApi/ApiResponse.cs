@@ -2,9 +2,9 @@
 {
     public partial class Numbers
     {
-        class ApiResponse
+        public class ApiResponse<TValue>
         {
-            public int[] Value { get; set; }
+            public TValue Value { get; set; }
             public string Cause { get; set; }
             public bool Success { get; set; }
         }

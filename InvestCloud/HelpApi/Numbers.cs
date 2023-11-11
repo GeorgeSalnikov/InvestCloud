@@ -11,8 +11,6 @@ namespace InvestCloud.HelpApi
     {
         const string ApiNumbers = @"https://recruitment-test.investcloud.com/api/numbers/";
         const string ValidationStringFormat = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string>{0}</string>";
-        //const string ValidationStringFormat = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://schemas.microsoft.com/2003/10/Serialization/\">{0}</string>";
-        // const string ValidationStringFormat = "{ \"string\": \"{0}\"}";
         public async Task InitDatasets(int size = 1000)
         {
             using var apiClient = new HttpClient();
@@ -31,7 +29,7 @@ namespace InvestCloud.HelpApi
             {
                 using var response = await apiClient.GetAsync($"{datasetName}/row/{idx}");
                 var jsonResponse = await response.Content.ReadAsStringAsync();
-                var apiResp = JsonSerializer.Deserialize<ApiResponse>(jsonResponse);
+                var apiResp = JsonSerializer.Deserialize<ApiResponse<int[]>>(jsonResponse);
                 result.Array2D[idx] = apiResp.Value;
             }
             return result;
@@ -44,6 +42,7 @@ namespace InvestCloud.HelpApi
             var content = new StringContent(hash, Encoding.UTF8, "application/xml");
 
             using var response = await apiClient.PostAsync($"validate", content);
+            response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync();
             return jsonResponse;
         }
@@ -54,7 +53,9 @@ namespace InvestCloud.HelpApi
             apiClient.BaseAddress = new Uri(ApiNumbers);
             ByteArrayContent content = new ByteArrayContent(hash);
             using var response = await apiClient.PostAsync($"validate", content);
+            response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync();
+            var apiResp = JsonSerializer.Deserialize<ApiResponse<string>>(jsonResponse);
             return jsonResponse;
         }
     }

@@ -11,10 +11,12 @@ namespace InvestCloud
         {
             Console.WriteLine($"Start Testing");
 
-            Test.ExecuteMultiplicationTest();
+            Test.ExecuteMultiplication2DTest();
+            Test.ExecuteMultiplication3DTest();
+            Test.ExecuteMultiplication3DTest2();
             Test.ExecuteHashTest();
-            await Test.ExecuteTest();
-        }
 
+            await Test.ExecuteMainTest(1000);
+        }
     }
 }
