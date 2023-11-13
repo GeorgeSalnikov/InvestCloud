@@ -20,21 +20,33 @@ namespace InvestCloud.HelpApi
 
         public async Task<Matrix> GetMatrix(string datasetName, int size = 1000)
         {
-            var result = new Matrix();
-            result.Init(size);
             using var apiClient = new HttpClient();
             apiClient.BaseAddress = new Uri(ApiNumbers);
 
+            var taskGetRow = new Task<int[]>[size];
             for (int idx = 0; idx < size; ++idx)
             {
-                using var response = await apiClient.GetAsync($"{datasetName}/row/{idx}");
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var apiResp = JsonSerializer.Deserialize<ApiResponse<int[]>>(jsonResponse);
-                result.Array2D[idx] = apiResp.Value;
+                taskGetRow[idx] = GetMatrixRowAsync(datasetName, idx, apiClient);
+            }
+            await Task.WhenAll(taskGetRow);
+
+            var result = new Matrix().Init(size);
+            for (int idx = 0; idx < size; ++idx)
+            {
+                result.Array2D[idx] = taskGetRow[idx].Result;
             }
             return result;
         }
-        
+
+        private async Task<int[]> GetMatrixRowAsync(string datasetName, int idx, HttpClient apiClient)
+        {
+            using var response = await apiClient.GetAsync($"{datasetName}/row/{idx}");
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+            var apiResp = JsonSerializer.Deserialize<ApiResponse<int[]>>(jsonResponse);
+            return apiResp.Value;
+        }
+
         public async Task<string> ValidateHash(string hash)
         {
             using var apiClient = new HttpClient();

@@ -11,24 +11,29 @@ namespace InvestCloud
         {
             var stopWatchTotal = Stopwatch.StartNew();
             var stopWatchGetData = Stopwatch.StartNew();
-            Console.WriteLine($"Getting data from API. Time is {DateTime.Now}");
+            Console.WriteLine($"Start Main Test\r\nGetting data from API. Time is {DateTime.Now}");
 
             var api = new HelpApi.Numbers();
             await api.InitDatasets(size);
-            var A = await api.GetMatrix("A", size);
-            var B = await api.GetMatrix("B", size);
-            Console.WriteLine($"Finished getting Data from API for {stopWatchGetData.Elapsed}\r\nStart multiplying two 1000x1000 matrixes. Time is {DateTime.Now}");
+            
+            var taskA = Task.Run(()=>api.GetMatrix("A", size));
+            var taskB = Task.Run(()=>api.GetMatrix("B", size));
+            var matrixes = await Task.WhenAll(taskA, taskB);
+            var A = matrixes[0];
+            var B = matrixes[1];
+
+            Console.WriteLine($"Finished getting Data from API. Elapsed {stopWatchGetData.Elapsed}\r\nStart multiplying two 1000x1000 matrixes. Time is {DateTime.Now}");
 
             var stopWatch = Stopwatch.StartNew();
             var resMatrix = A * B;
-            Console.WriteLine($"StopWatch.Elapsed = {stopWatch.Elapsed.ToString()}");
+            Console.WriteLine($"Finished Multiplication. Elapsed = {stopWatch.Elapsed}");
 
             var resMatrixContentString = GetMatrixContentString(resMatrix);
 
             var hash = Hash.ComputeMD5Hash(resMatrixContentString);
             var success = await api.ValidateHash(hash);
             Console.WriteLine($"Hash validation = {success}");
-            Console.WriteLine($"StopWatchTotal.Elapsed = {stopWatchTotal.Elapsed.ToString()}. Time is {DateTime.Now}");
+            Console.WriteLine($"Total Elapsed (with data retrieval and computation) = {stopWatchTotal.Elapsed}. Time is {DateTime.Now}");
         }
 
         private static string GetMatrixContentString(Matrix matrix)

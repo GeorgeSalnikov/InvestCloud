@@ -8,11 +8,9 @@ namespace InvestCloud
     {
         public static byte[] ComputeMD5(string text)
             => MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(text));
+        
         public static string ComputeMD5Hash(string text)
-        {
-            var hash = MD5.Create();
-            return ConvertByteArrayToString(hash.ComputeHash(Encoding.UTF8.GetBytes(text)));
-        }
+            => ConvertByteArrayToString(ComputeMD5(text));
 
         public static string ComputeSHA1Hash(string text)
         {

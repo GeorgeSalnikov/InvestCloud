@@ -28,25 +28,7 @@ namespace InvestCloud
             set => Array2D[index] = value;
         }
 
-        public Matrix MultiplyBy(Matrix other)
-        {
-            if (other == null || other.Size != Size || Size <= 0)
-                throw new ArgumentException(nameof(other));
-
-            Matrix res = new Matrix().Init(Size, initColumns: true); 
-            for (int rowA = 0; rowA < Size; ++rowA)
-            {
-                for (int colB = 0; colB < other.Size; ++colB)
-                {
-                    for (int colA = 0; colA < Size; ++colA)
-                        res.Array2D[rowA][colB] += Array2D[rowA][colA] * other.Array2D[colA][colB];
-                }
-            }
-
-            return res;
-        }
-
-        private void MultiplyByFast(int[] row, long rowA, Matrix other, Matrix res)
+        private void MultiplyBy(int[] row, long rowA, Matrix other, Matrix res)
         {
             for (int colB = 0; colB < other.Size; ++colB)
             {
@@ -59,14 +41,14 @@ namespace InvestCloud
             }
         }
 
-        public Matrix MultiplyByFast(Matrix other)
+        public Matrix MultiplyBy(Matrix other)
         {
             if (other == null || other.Size != Size || Size <= 0)
                 throw new ArgumentException(nameof(other));
 
             Matrix res = new Matrix().Init(Size, initColumns : true);
 
-            Parallel.ForEach(this.Array2D, (row, state, rowA) => MultiplyByFast(row, rowA, other, res));
+            Parallel.ForEach(this.Array2D, (row, state, rowA) => MultiplyBy(row, rowA, other, res));
             
             return res;
         }
@@ -75,7 +57,7 @@ namespace InvestCloud
         {
             if (matrixA == null)
                 throw new ArgumentException(nameof(matrixA));
-            return matrixA.MultiplyByFast(matrixB);
+            return matrixA.MultiplyBy(matrixB);
         }
 
         public static Matrix Create(params int[][] columns)
