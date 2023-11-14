@@ -42,7 +42,7 @@ namespace InvestCloud
             for (int row = 0; row < matrix.Size; ++row)
             for (int col = 0; col < matrix.Size; ++col)
             {
-                var number = matrix.Array2D[row][col];
+                var number = matrix[row][col];
                 sb.Append(number);
             }
             return sb.ToString();
@@ -58,93 +58,104 @@ namespace InvestCloud
 
         static public void ExecuteMultiplication2DTest()
         {
-            var A = new Matrix().Init(2);
-            var B = new Matrix().Init(2);
-
-            A.Array2D[0] = new int[] { 1, -2 };
-            A.Array2D[1] = new int[] { 5, 12 };
-            B.Array2D[0] = new int[] { 0, 3 };
-            B.Array2D[1] = new int[] { 5, -1 };
+            var A = Matrix.Create(new int[][] {
+                new int[] { 1, -2 },
+                new int[] { 5, 12 } });
+            var B = Matrix.Create(new int[][] {
+                new int[] { 0, 3 },
+                new int[] { 5, -1 } });
 
             var AB = A * B;
-            Debug.Assert(AB.Array2D[0][0] == 1 * 0 + -2 * 5);
-            Debug.Assert(AB.Array2D[0][1] == 1 * 3 + -2 * -1);
-            Debug.Assert(AB.Array2D[0][0] == -10);
-            Debug.Assert(AB.Array2D[0][1] == 5);
+            Debug.Assert(AB[0][0] == 1 * 0 + -2 * 5);
+            Debug.Assert(AB[0][1] == 1 * 3 + -2 * -1);
+            Debug.Assert(AB[0][0] == -10);
+            Debug.Assert(AB[0][1] == 5);
 
-            Debug.Assert(AB.Array2D[1][0] == 5 * 0 + 12 * 5);
-            Debug.Assert(AB.Array2D[1][1] == 5 * 3 + 12 * -1);
-            Debug.Assert(AB.Array2D[1][0] == 60);
-            Debug.Assert(AB.Array2D[1][1] == 3);
+            Debug.Assert(AB[1][0] == 5 * 0 + 12 * 5);
+            Debug.Assert(AB[1][1] == 5 * 3 + 12 * -1);
+            Debug.Assert(AB[1][0] == 60);
+            Debug.Assert(AB[1][1] == 3);
         }
         static public void ExecuteMultiplication3DTest()
         {
-            var A = Matrix.Create(new int[][] { new int[] { 1, 2, 4 }, new int[] { 1, -1, 2 }, new int[] { 3, 4,  5 } });
-            var B = Matrix.Create(new int[][] { new int[] { 1, 2, 1 }, new int[] { 0, 1, 2  }, new int[] { 1, 1, -1 } });
+            var A = Matrix.Create(new int[][] { 
+                new int[] { 1, 2, 4 }, 
+                new int[] { 1, -1, 2 }, 
+                new int[] { 3, 4,  5 } });
+            var B = Matrix.Create(new int[][] { 
+                new int[] { 1, 2, 1 }, 
+                new int[] { 0, 1, 2  }, 
+                new int[] { 1, 1, -1 } });
 
             var AB = A * B;
 
             //Assert 1 row result matrix
             int row = 0;
-            Debug.Assert(AB.Array2D[row][0] == 1 * 1 + 2 * 0 + 4 * 1);
-            Debug.Assert(AB.Array2D[row][1] == 1 * 2 + 2 * 1 + 4 * 1);
-            Debug.Assert(AB.Array2D[row][2] == 1 * 1 + 2 * 2 + 4 * -1);
-            Debug.Assert(AB.Array2D[row][0] == 5);
-            Debug.Assert(AB.Array2D[row][1] == 8);
-            Debug.Assert(AB.Array2D[row][2] == 1);
+            Debug.Assert(AB[row][0] == 1 * 1 + 2 * 0 + 4 * 1);
+            Debug.Assert(AB[row][1] == 1 * 2 + 2 * 1 + 4 * 1);
+            Debug.Assert(AB[row][2] == 1 * 1 + 2 * 2 + 4 * -1);
+            Debug.Assert(AB[row][0] == 5);
+            Debug.Assert(AB[row][1] == 8);
+            Debug.Assert(AB[row][2] == 1);
 
             //Assert 2 row result matrix
             row = 1;
-            Debug.Assert(AB.Array2D[row][0] == 1 * 1 + -1 * 0 + 2 * 1);
-            Debug.Assert(AB.Array2D[row][1] == 1 * 2 + -1 * 1 + 2 * 1);
-            Debug.Assert(AB.Array2D[row][2] == 1 * 1 + -1 * 2 + 2 * -1);
-            Debug.Assert(AB.Array2D[row][0] == 3);
-            Debug.Assert(AB.Array2D[row][1] == 3);
-            Debug.Assert(AB.Array2D[row][2] == -3);
+            Debug.Assert(AB[row][0] == 1 * 1 + -1 * 0 + 2 * 1);
+            Debug.Assert(AB[row][1] == 1 * 2 + -1 * 1 + 2 * 1);
+            Debug.Assert(AB[row][2] == 1 * 1 + -1 * 2 + 2 * -1);
+            Debug.Assert(AB[row][0] == 3);
+            Debug.Assert(AB[row][1] == 3);
+            Debug.Assert(AB[row][2] == -3);
 
             //Assert 3 row result matrix
             row = 2;
-            Debug.Assert(AB.Array2D[row][0] == 3 * 1 + 4 * 0 + 5 * 1);
-            Debug.Assert(AB.Array2D[row][1] == 3 * 2 + 4 * 1 + 5 * 1);
-            Debug.Assert(AB.Array2D[row][2] == 3 * 1 + 4 * 2 + 5 * -1);
-            Debug.Assert(AB.Array2D[row][0] == 8);
-            Debug.Assert(AB.Array2D[row][1] == 15);
-            Debug.Assert(AB.Array2D[row][2] == 6);
+            Debug.Assert(AB[row][0] == 3 * 1 + 4 * 0 + 5 * 1);
+            Debug.Assert(AB[row][1] == 3 * 2 + 4 * 1 + 5 * 1);
+            Debug.Assert(AB[row][2] == 3 * 1 + 4 * 2 + 5 * -1);
+            Debug.Assert(AB[row][0] == 8);
+            Debug.Assert(AB[row][1] == 15);
+            Debug.Assert(AB[row][2] == 6);
         }
 
         static public void ExecuteMultiplication3DTest2()
         {
-            var A = Matrix.Create(new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { -1, -2, 3 } });
-            var B = Matrix.Create(new int[][] { new int[] { 0, -2, 3 }, new int[] { 4, 0, 6 }, new int[] { -1, 2, 0 } });
+            var A = Matrix.Create(new int[][] { 
+                new int[] { 1, 2, 3 }, 
+                new int[] { 4, 5, 6 }, 
+                new int[] { -1, -2, 3 } });
+            var B = Matrix.Create(new int[][] { 
+                new int[] { 0, -2, 3 }, 
+                new int[] { 4, 0, 6 }, 
+                new int[] { -1, 2, 0 } });
 
             var AB = A * B;
 
             //Assert 1 row result matrix
             int row = 0;
-            Debug.Assert(AB.Array2D[row][0] == 1 * 0 + 2 * 4 + 3 * -1);
-            Debug.Assert(AB.Array2D[row][1] == 1 * -2 + 2 * 0 + 3 * 2);
-            Debug.Assert(AB.Array2D[row][2] == 1 * 3 + 2 * 6 + 3 * 0);
-            Debug.Assert(AB.Array2D[row][0] == 5);
-            Debug.Assert(AB.Array2D[row][1] == 4);
-            Debug.Assert(AB.Array2D[row][2] == 15);
+            Debug.Assert(AB[row][0] == 1 * 0 + 2 * 4 + 3 * -1);
+            Debug.Assert(AB[row][1] == 1 * -2 + 2 * 0 + 3 * 2);
+            Debug.Assert(AB[row][2] == 1 * 3 + 2 * 6 + 3 * 0);
+            Debug.Assert(AB[row][0] == 5);
+            Debug.Assert(AB[row][1] == 4);
+            Debug.Assert(AB[row][2] == 15);
 
             //Assert 2 row result matrix
             row = 1;
-            Debug.Assert(AB.Array2D[row][0] == 4 * 0 + 5 * 4 + 6 * -1);
-            Debug.Assert(AB.Array2D[row][1] == 4 * -2 + 5 * 0 + 6 * 2);
-            Debug.Assert(AB.Array2D[row][2] == 4 * 3 + 5 * 6 + 6 * 0);
-            Debug.Assert(AB.Array2D[row][0] == 14);
-            Debug.Assert(AB.Array2D[row][1] == 4);
-            Debug.Assert(AB.Array2D[row][2] == 42);
+            Debug.Assert(AB[row][0] == 4 * 0 + 5 * 4 + 6 * -1);
+            Debug.Assert(AB[row][1] == 4 * -2 + 5 * 0 + 6 * 2);
+            Debug.Assert(AB[row][2] == 4 * 3 + 5 * 6 + 6 * 0);
+            Debug.Assert(AB[row][0] == 14);
+            Debug.Assert(AB[row][1] == 4);
+            Debug.Assert(AB[row][2] == 42);
 
             //Assert 3 row result matrix
             row = 2;
-            Debug.Assert(AB.Array2D[row][0] == -1 * 0 + -2 * 4 + 3 * -1);
-            Debug.Assert(AB.Array2D[row][1] == -1 * -2  + -2 * 0 + 3 * 2);
-            Debug.Assert(AB.Array2D[row][2] == -1 * 3 + -2 * 6 + 3 * 0);
-            Debug.Assert(AB.Array2D[row][0] == -11);
-            Debug.Assert(AB.Array2D[row][1] == 8);
-            Debug.Assert(AB.Array2D[row][2] == -15);
+            Debug.Assert(AB[row][0] == -1 * 0 + -2 * 4 + 3 * -1);
+            Debug.Assert(AB[row][1] == -1 * -2  + -2 * 0 + 3 * 2);
+            Debug.Assert(AB[row][2] == -1 * 3 + -2 * 6 + 3 * 0);
+            Debug.Assert(AB[row][0] == -11);
+            Debug.Assert(AB[row][1] == 8);
+            Debug.Assert(AB[row][2] == -15);
         }
     }
 }

@@ -5,8 +5,8 @@ namespace InvestCloud
 {
     public class Matrix    //public class Matrix<T> where T : System.Numerics.INumber<T> // for .NET 7
     {
-        public int[][] Array2D { get; private set; } = null;
-        public int Size { get; private set; } = 0;
+        public int[][] Array2D { get; private set; }
+        public int Size { get; private set; }
 
         public Matrix Init(int size, bool initColumns = false)
         {

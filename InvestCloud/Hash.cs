@@ -12,11 +12,11 @@ namespace InvestCloud
         public static string ComputeMD5Hash(string text)
             => ConvertByteArrayToString(ComputeMD5(text));
 
+        public static byte[] ComputeSHA1(string text)
+            => SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(text));
+
         public static string ComputeSHA1Hash(string text)
-        {
-            using var hash = SHA1.Create();
-            return ConvertByteArrayToString(hash.ComputeHash(Encoding.UTF8.GetBytes(text)));
-        }
+            => ConvertByteArrayToString(ComputeSHA1(text));
 
         public static string ConvertByteArrayToString(byte[] bytes)
         {
